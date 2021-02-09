@@ -1,76 +1,84 @@
 from collections import deque
 
+# !!! UNKNOWN BUSINESS LOGIC - possible to replace 1 and 2.
 
+
+# 1. special case check - if m or f divisible by 25 without reminder
+def is_special_case(value):
+    if value % 25 == 0:
+        return True
+    return False
+
+
+# 2. validate the value before trying to match
+def valid_value_check(value):
+    if value > 0:
+        return True
+    return False
+
+
+# 3. compare the values of both m and f
 def is_match(m, f):
     if m == f:
         return True
     return False
 
 
-def male_points_decrease(m):
-    m -= 2
-    if m > 0:
-        return m
+# 4. print the output
+def output_print(m, f, matches_n):
+    print(f"Matches: {matches_n}")
+    if m:
+        m = ', '.join([str(x) for x in list(m)[::-1]])
+    else:
+        m = "none"
+    if f:
+        f = ', '.join([str(x) for x in list(f)])
+    else:
+        f = "none"
+    print(f"Males left: {m}")
+    print(f"Females left: {f}")
 
 
-def special_case(g_value, g_list, g):
-    if g_value % 25 == 0:
-        for _ in range(2):
-            if g == "m":
-                g_list.pop()
-            elif g == "f":
-                g_list.popleft()
-    return g_list
+def run_the_app():
+    mans = deque([int(x) for x in input().split(' ')])
+    fems = deque([int(x) for x in input().split(' ')])
 
-
-def special_check(g):
-    if g % 25 == 0:
-        return True
-    return False
-
-
-def run_the_tinder(males, females):
     matches = 0
-    while males and females:
-        current_m = males.pop()
-        current_f = females.popleft()
-        if current_m == 0:
-            females.appendleft(current_f)
+
+    while True:
+        if not mans or not fems:
+            break
+        m = mans.pop()
+        f = fems.popleft()
+
+        # 2. check for positive values
+        if not valid_value_check(m):
+            fems.appendleft(f)
             continue
-        elif current_f == 0:
-            males.append(current_m)
+        if not valid_value_check(f):
+            mans.append(m)
             continue
-        if special_check(current_m):
-            males = special_case(current_m, males, "m")
+
+        # 1. check for special case
+        if is_special_case(m):
+            mans.pop()
             continue
-        elif special_check(current_f):
-            females = special_case(current_f, females, "f")
+        if is_special_case(f):
+            fems.popleft()
             continue
-        if is_match(current_m, current_f):
+
+        # 3 check for match
+        if is_match(m, f):
             matches += 1
+            continue
         else:
-            if male_points_decrease(current_m):
-                males.append(male_points_decrease(current_m))
-    return matches, males, females
+            m -= 2
+            mans.append(m)
+
+    # 4. print the output
+    output_print(mans, fems, matches)
 
 
-def output_printer(matches, males, females):
-    print(f"Matches: {matches}")
-
-    if males:
-        print(f"Males left: {', '.join([str(m) for m in males])}")
-    else:
-        print("Males left: none")
-    if females:
-        print(f"Females left: {', '.join([str(f) for f in females])}")
-    else:
-        print("Females left: none")
-
-
-males_deque = deque([int(x) for x in input().split()])
-females_deque = deque([int(x) for x in input().split()])
-
-matches, males, females = run_the_tinder(males_deque, females_deque)
-output_printer(matches, males, females)
+run_the_app()
 
 
