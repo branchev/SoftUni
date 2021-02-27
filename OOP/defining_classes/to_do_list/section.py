@@ -1,4 +1,4 @@
-from project.task import Task
+# from project.task import Task
 
 
 class Section:
@@ -13,12 +13,12 @@ class Section:
         return f"Task is already in the section {self.name}"
 
     def complete_task(self, task_name):
-        if task_name not in self.tasks:
+        try:
+            searched_task_class = [t_class for t_class in self.tasks if t_class.name == task_name][0]
+            searched_task_class.completed = True
+            return f"Completed task {task_name}"
+        except IndexError:
             return f"Could not find task with the name {task_name}"
-
-        searched_task_class = [t_class for t_class in self.tasks if t_class.name == task_name][0]
-        searched_task_class.completed = True
-        return f"Completed task {task_name}"
 
     def clean_section(self):
         completed_tasks = [t_class for t_class in self.tasks if t_class.completed]
@@ -35,10 +35,10 @@ class Section:
 
         return output
 
-
-task = Task("Odi da pikash", "27/05/2020")
-print(task.change_name("Odi da seresh"))
-print(task.change_due_date("28.05.2020"))
+#
+# task = Task("Make bed", "27/05/2020")
+# print(task.change_name("Go to University"))
+# print(task.change_due_date("28.05.2020"))
 # task.add_comment("Don't forget laptop")
 # print(task.edit_comment(0, "Don't forget laptop and notebook"))
 # print(task.details())
@@ -48,3 +48,4 @@ print(task.change_due_date("28.05.2020"))
 # section.add_task(second_task)
 # print(section.clean_section())
 # print(section.view_section())
+#
