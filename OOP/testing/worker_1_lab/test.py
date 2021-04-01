@@ -1,4 +1,5 @@
 from testing.worker_1_lab.worker import Worker
+from parameterized import parameterized
 import unittest
 
 
@@ -16,14 +17,17 @@ class WorkerTests(unittest.TestCase):
         self.worker.rest()
         self.assertEqual(self.worker.energy - initial_energy, 1)
 
-    def test_is_error_raised_after_worker_tries_to_work_with_negative_energy(self):
-        self.worker.energy = -45
-        with self.assertRaises(Exception) as exc:
-            self.worker.work()
-        self.assertEqual(str(exc.exception), "Not enough energy.")
+    # def test_is_error_raised_after_worker_tries_to_work_with_negative_energy(self):
+    #     self.worker.energy = -45
+    #     with self.assertRaises(Exception) as exc:
+    #         self.worker.work()
+    #     self.assertEqual(str(exc.exception), "Not enough energy.")
 
-    def test_is_error_raised_after_worker_tries_to_work_with_zero_energy(self):
-        self.worker.energy = 0
+    @parameterized.expand([
+        (-55,),
+        (0,)],)
+    def test_is_error_raised_after_worker_tries_to_work_with_zero_or_negative_energy(self, energy):
+        self.worker.energy = energy
         with self.assertRaises(Exception) as exc:
             self.worker.work()
         self.assertEqual(str(exc.exception), "Not enough energy.")
