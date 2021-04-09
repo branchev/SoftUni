@@ -1,11 +1,8 @@
-from abc import ABC, abstractmethod
-
-from survivor import Survivor
+from project.survivor import Survivor
 
 
-class Medicine(ABC):
-    @abstractmethod
-    def __init__(self, health_increase):
+class Medicine:
+    def __init__(self, health_increase: int):
         self.__health_increase = health_increase
 
     @property
@@ -16,12 +13,8 @@ class Medicine(ABC):
     def health_increase(self, value):
         if value < 0:
             raise ValueError("Health increase cannot be less than zero.")
-        self.__health_increase += value
+        self.__health_increase = value
 
     def apply(self, survivor: Survivor):
-        survivor.health += self.health_increase
-
-
-
-
+        survivor.health += self.__health_increase
 
